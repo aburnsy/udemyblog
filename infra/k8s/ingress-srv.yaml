@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-srv
+  annotations:
+    kubernetes.io/ingress.class: nginx #Tells nginx that there is a config for it to use
+spec:
+  rules:
+    - host: posts.com
+      http:
+        paths:
+          - path: /posts
+            pathType: Prefix
+            backend:
+              service:
+                name: posts-clusterip-srv
+                port:
+                  number: 4000
+          - path: /posts/*/comments
+            pathType: Prefix
+            backend:
+              service:
+                name: comments-srv
+                port:
+                  number: 4001
+          - path: /query
+            pathType: Prefix
+            backend:
+              service:
+                name: query-srv
+                port:
+                  number: 4005
